@@ -2,12 +2,15 @@ import { Box, Button, Container, TextField, Typography } from '@mui/material';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from './ContextApi/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
+
+  const { isLoggedIn, setIsLoggedIn } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -17,6 +20,7 @@ const Login = () => {
         password,
       });
       console.log(response.data);
+      setIsLoggedIn(true);
 
       // Assuming the response structure is { token, user: { name, role, _id } }
       const { token, user } = response.data;
@@ -25,7 +29,7 @@ const Login = () => {
       sessionStorage.setItem('name', user.name);
       sessionStorage.setItem('role', user.role);
       sessionStorage.setItem('userId', user.userId);
-      sessionStorage.setItem('token', response.data.token);
+      sessionStorage.setItem('token', token);
 
       alert('Login successful');
       navigate('/');

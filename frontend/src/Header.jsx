@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AppBar, Toolbar, Typography, Button, Box, IconButton, InputBase } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
@@ -50,13 +50,19 @@ const Header = () => {
   const { isLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
 
+  const [darkMode, setDarkMode] = useState(false);
+
   const handleLogout = () => {
     logout();
     navigate('/');
   };
 
+  const toggleDarkMode = () => {
+    setDarkMode((prevMode) => !prevMode);
+  };
+
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#1976d2' }}>
+    <AppBar position="static" sx={{ backgroundColor: darkMode ? '#333' : '#1976d2' }}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -73,7 +79,10 @@ const Header = () => {
           />
         </Search>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {!isLoggedIn && (
+          <Button color="inherit" onClick={toggleDarkMode}>
+            {darkMode ? 'Light Mode' : 'Dark Mode'}
+          </Button>
+          {!isLoggedIn ? (
             <>
               <Button color="inherit" component={Link} to="/register">
                 Register
@@ -82,8 +91,7 @@ const Header = () => {
                 Login
               </Button>
             </>
-          )}
-          {isLoggedIn && (
+          ) : (
             <Button color="inherit" onClick={handleLogout}>
               Logout
             </Button>
