@@ -8,6 +8,10 @@ const app = express()
 const morgan = require("morgan") //HTTP request logger middleware
 const cookieParser = require("cookie-parser")
 const fileUpload = require("express-fileupload")
+
+const cors = require('cors');
+app.use(cors());
+
 // Require Database
 const connectDB = require("./db/connect")
 // Require Routers

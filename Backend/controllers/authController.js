@@ -1,7 +1,7 @@
 const User = require("../models/userModel")
 const { StatusCodes } = require("http-status-codes")
 const CustomError = require("../errors")
-const { createTokenUser, attachCookiesToResponse } = require("../utils")
+const { createTokenUser, attachCookiesToResponse, createJWT } = require("../utils")
 
 // Register User
 const register = async (req, res) => {
@@ -35,8 +35,11 @@ const login = async (req, res) => {
     throw new CustomError.UnauthenticatedError("Invalid Credentials")
   }
   const tokenUser = createTokenUser(user)
+  const token = createJWT({ payload: tokenUser });
+  console.log("tiken",token);
+  
   attachCookiesToResponse({ res, user: tokenUser })
-  res.status(StatusCodes.OK).json({ user: tokenUser, msg: "Login successful!" })
+  res.status(StatusCodes.OK).json({ user: tokenUser, token:token, msg: "Login successful!" })
 }
 
 // Logout User
